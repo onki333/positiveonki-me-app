@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>매일 긍정 확언 메모</title>
+    <style>
+        body { 
+            font-family: system-ui, -apple-system, sans-serif; 
+            margin: 0; 
+            padding: 20px; 
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2); 
+            color: #333; 
+            min-height: 100vh; 
+        }
+        .container { 
+            max-width: 800px; 
+            margin: 0 auto; 
+            background: white; 
+            padding: 30px; 
+            border-radius: 16px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
+        }
+        h1 { text-align: center; color: #2c3e50; margin-bottom: 10px; }
+        .quote { 
+            font-size: 1.35em; 
+            font-style: italic; 
+            background: #e8f4f8; 
+            padding: 30px; 
+            border-radius: 12px; 
+            border-left: 8px solid #3498db; 
+            margin: 25px 0; 
+            line-height: 1.5; 
+        }
+        .author { text-align: right; font-weight: bold; color: #2980b9; margin-top: 10px; }
+        textarea { 
+            width: 100%; 
+            height: 90px; 
+            margin: 8px 0 20px; 
+            padding: 14px; 
+            font-size: 1.1em; 
+            border: 2px solid #ddd; 
+            border-radius: 8px; 
+            resize: vertical; 
+        }
+        button { 
+            padding: 14px 28px; 
+            font-size: 1.1em; 
+            background: #3498db; 
+            color: white; 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            margin: 5px; 
+        }
+        button:hover { background: #2980b9; }
+        .history { margin-top: 50px; }
+        .entry { 
+            background: #f8f9fa; 
+            padding: 18px; 
+            margin: 12px 0; 
+            border-radius: 10px; 
+            border-left: 5px solid #27ae60; 
+        }
+    </style>
+    <link rel="manifest" href="manifest.json">
+</head>
+<body>
+    <div class="container">
+        <h1>🌟 나만의 긍정 확언 메모</h1>
+        <p style="text-align:center; color:#555;">세계적인 인물들의 지혜와 함께 매일 3번 반복 작성하며 성장하세요.</p>
+        
+        <div id="quote-section">
+            <div class="quote" id="daily-quote"></div>
+            <div class="author" id="daily-author"></div>
+        </div>
+
+        <h2>오늘의 확언 3번 작성하기</h2>
+        <div id="writing-area"></div>
+
+        <button onclick="saveEntry()">작성 완료 & 저장</button>
+        <button onclick="showHistory()" style="background:#27ae60;">과거 기록 보기</button>
+
+        <div class="history" id="history"></div>
+    </div>
+
+    <script>
+        const quotes = [
+            { text: "자신을 믿으라. 그러면 당신은 이미 반은 성공한 것이다.", author: "Theodore Roosevelt" },
+            { text: "당신이 되기로 결심한 사람이 바로 당신이 될 운명이다.", author: "Ralph Waldo Emerson" },
+            { text: "모든 꿈은 그것을 추구할 용기가 있다면 이루어질 수 있다.", author: "Walt Disney" },
+            { text: "실패에서 실패로 걸어가되 열정을 잃지 않는 것이 성공이다.", author: "Winston Churchill" },
+            { text: "당신 안에 있는 무언가가 어떤 장애물보다 크다는 것을 믿으라.", author: "Christian D. Larson" },
+            { text: "생각하는 대로 당신은 된다.", author: "Mahatma Gandhi" },
+            { text: "긍정적 사고는 모든 것을 더 잘하게 만든다.", author: "Zig Ziglar" },
+            { text: "자신을 사랑하고, 자신을 받아들이고, 앞으로 나아가라.", author: "Louise Hay" },
+            { text: "오늘 나는 행복을 선택한다.", author: "Maya Angelou" },
+            { text: "당신은 믿는 만큼 강하다.", author: "Eleanor Roosevelt" },
+            { text: "작은 일에 충실하면 큰 성공이 따른다.", author: "Confucius" },
+            { text: "변화는 당신의 마음속에서 시작된다.", author: "Norman Vincent Peale" },
+            { text: "나는 매일 성장하고 발전한다.", author: "Louise Hay" },
+            { text: "용기는 압박 속에서의 우아함이다.", author: "Ernest Hemingway" },
+            { text: "성공은 열정으로 이루어진다.", author: "Steve Jobs" }
+        ];
+
+        function getDailyQuote() {
+            const today = new Date();
+            const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / 86400000);
+            return quotes[dayOfYear % quotes.length];
+        }
+
+        function renderWritingArea() {
+            const area = document.getElementById('writing-area');
+            area.innerHTML = '';
+            for (let i = 1; i <= 3; i++) {
+                const div = document.createElement('div');
+                div.innerHTML = `<p><strong>${i}번째 작성</strong></p><textarea id="write${i}" placeholder="확언을 정확히 반복해서 적어주세요..."></textarea>`;
+                area.appendChild(div);
+            }
+        }
+
+        function saveEntry() {
+            const quoteEl = document.getElementById('daily-quote');
+            const entries = [];
+            for (let i = 1; i <= 3; i++) {
+                const text = document.getElementById(`write${i}`).value.trim();
+                if (text) entries.push(text);
+            }
+            
+            if (entries.length < 3) {
+                alert("3번 모두 작성해 주세요.");
+                return;
+            }
+
+            const today = new Date().toISOString().split('T')[0];
+            let history = JSON.parse(localStorage.getItem('positiveHistory') || '[]');
+            history.unshift({ date: today, quote: quoteEl.innerText, entries: entries });
+            localStorage.setItem('positiveHistory', JSON.stringify(history.slice(0, 60)));
+
+            alert("✅ 오늘의 긍정 연습이 저장되었습니다!");
+            showHistory();
+        }
+
+        function showHistory() {
+            const historyDiv = document.getElementById('history');
+            let history = JSON.parse(localStorage.getItem('positiveHistory') || '[]');
+            
+            if (history.length === 0) {
+                historyDiv.innerHTML = '<p style="text-align:center; color:#777;">아직 기록이 없습니다.</p>';
+                return;
+            }
+
+            let html = '<h2>📖 과거 기록</h2>';
+            history.forEach(entry => {
+                html += `<div class="entry"><strong>${entry.date}</strong><br><em>${entry.quote}</em><br>`;
+                entry.entries.forEach((text, idx) => html += `<p>${idx+1}. ${text}</p>`);
+                html += '</div>';
+            });
+            historyDiv.innerHTML = html;
+        }
+
+        window.onload = () => {
+            const daily = getDailyQuote();
+            document.getElementById('daily-quote').innerText = daily.text;
+            document.getElementById('daily-author').innerText = `- ${daily.author}`;
+            renderWritingArea();
+        };
+    </script>
+</body>
+</html>

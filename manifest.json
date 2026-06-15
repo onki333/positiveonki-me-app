@@ -1,0 +1,21 @@
+{
+  "name": "매일 긍정 확언 메모",
+  "short_name": "긍정메모",
+  "description": "세계적인 인물들의 긍정 확언을 매일 만나고 3번 반복 작성하는 앱",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f8f9fa",
+  "theme_color": "#3498db",
+  "icons": [
+    {
+      "src": "https://via.placeholder.com/192x192/3498db/ffffff?text=🌟",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://via.placeholder.com/512x512/3498db/ffffff?text=🌟",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
